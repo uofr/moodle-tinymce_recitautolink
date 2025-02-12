@@ -24,14 +24,14 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2024090400;
-$plugin->requires  = 2024090300.00; // 4.5dev+
+$plugin->version   = 2025012600;
+$plugin->requires  = 2024071200.00; // Moodle 4.5.0
 $plugin->component = 'tiny_recitautolink';
 
 $plugin->release = 'v1.0.0-beta';
 $plugin->supported = [405, 405];      //  Moodle 4.1.x are supported.
 $plugin->maturity = MATURITY_BETA; // MATURITY_ALPHA, MATURITY_BETA, MATURITY_RC or MATURITY_STABLE
- 
+  
 $plugin->dependencies = [
-	'filter_recitactivity' => 2024052900
+	'filter_recitactivity' => 2025013000
 ];

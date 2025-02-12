@@ -16,7 +16,7 @@
 /**
  *
  * @module      tiny_recitautolink/plugin
- * @copyright  2024 RECIT
+ * @copyright  2019 RECIT
  * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
  */
 
@@ -29,6 +29,7 @@ import {Editor} from './wrapper';
 import * as Configuration from './configuration';
 import * as Options from './options';
 
+// eslint-disable-next-line no-async-promise-executor
 export default new Promise(async(resolve) => {
     const bseditor = new Editor();
     const [

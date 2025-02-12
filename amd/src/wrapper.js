@@ -19,104 +19,86 @@
  * @copyright  2019 RECIT
  * @license    {@link http://www.gnu.org/licenses/gpl-3.0.html} GNU GPL v3 or later
  */
-///import {get_string as getString} from 'core/str';
-import {getFilePicker} from 'editor_tiny/options';
+import {get_string as getString} from 'core/str';
+import {getCourseId} from './options';
+import Modal from 'core/modal';
+import ModalEvents from 'core/modal_events';
 
 export class Editor {
-    globalVars = {editor: null, popup: null, backdrop: null, appReact: null};
+    appReact = null;
+    modal = null;
 
-    open(editor){
-        this.globalVars.editor = editor;
+    async open(editor) {
+        this.editor = editor;
+        let url = M.cfg.wwwroot;
+        let js = url + "/lib/editor/tiny/plugins/recitautolink/react/build/index.js";
+        let that = this;
 
-        var url = M.cfg.wwwroot;
-        var js = url +"/lib/editor/atto/plugins/recitautolink/react/build/index.js";
-        //var css = url +"/lib/editor/atto/plugins/recitautolink/build/index.css";
-        
-        var content = document.createElement('div');
-        content.setAttribute('id', 'recitautolink_container');
-        this.createPopup(content);
-        
-        if (!document.getElementById('recitautolink')){
+        this.modal = await Modal.create({
+            title: getString('pluginname', 'tiny_recitautolink'),
+            body: '<div id="recitautolink_container"></div>'
+        });
+
+        this.modal.setRemoveOnClose(true);
+        this.modal.getModal().addClass('modal-xl');
+
+        this.modal.getRoot().on(ModalEvents.hidden, () => {
+            that.unmountUI();
+            that.modal.destroy();  
+        });
+
+        this.modal.show();
+
+        if (!document.getElementById('recitautolink')) {
             var script = document.createElement('script');
-            script.onload = this.loadUi.bind(this);
-            script.setAttribute('src', js);
+            script.onload = this.loadUI.bind(this); 
+            script.setAttribute('src', js); 
             script.setAttribute('id', 'recitautolink');
             script.setAttribute('type', 'text/javascript');
             document.getElementsByTagName('head')[0].appendChild(script);
-            /*script = document.createElement('link');
-            script.setAttribute('href', css);
-            script.setAttribute('rel', 'stylesheet');
-            document.getElementsByTagName('head')[0].appendChild(script);*/
-        }else{
-            this.loadUi();
+        } else {
+            this.loadUI();
         }
     }
 
-    createPopup(content) {        
-        let modal = document.createElement('div');
-        modal.classList.add('modal', 'fade', 'autolink_popup');        
-        modal.setAttribute('style', 'overflow-y: hidden;');
-
-        let inner2 = document.createElement('div');
-        inner2.classList.add('modal-dialog');
-        inner2.classList.add('modal-xl');
-        modal.appendChild(inner2);
-
-        let inner = document.createElement('div');
-        inner.classList.add('modal-content');
-        inner2.appendChild(inner);
-
-        let header = document.createElement('div');
-        header.classList.add('modal-header');
-        header.innerHTML = "<h2>"+M.util.get_string('pluginname', 'atto_recitautolink')+"</h2>";
-        inner.appendChild(header);
-
-        let btn = document.createElement('button');
-        btn.classList.add('close');
-        btn.innerHTML = '<span aria-hidden="true">&times;</span>';
-        btn.setAttribute('data-dismiss', 'modal');
-        btn.onclick = this.destroy.bind(this);
-        header.appendChild(btn);
-        
-        let body = document.createElement('div');
-        body.classList.add('modal-body');
-        inner.appendChild(body);
-        body.appendChild(content);
-        
-        document.body.appendChild(modal);
-        this.globalVars.popup = modal;
-
-        this.globalVars.popup.classList.add('show');
-
-        this.globalVars.backdrop = document.createElement('div');
-        this.globalVars.backdrop.classList.add('modal-backdrop', 'fade', 'show');
-        this.globalVars.backdrop.setAttribute('data-backdrop', 'static');
-        document.body.appendChild(this.globalVars.backdrop);
+    /**
+     * Get template context.
+     *
+     * @param {TinyMCE} editor
+     * @returns {Object}
+     */
+    getTemplateContext(editor) {
+        return {
+            elementid: editor.id
+        };
     }
 
-    destroy(){
-        this.globalVars.popup.classList.remove('show');
-        this.globalVars.backdrop.classList.remove('show');
-        this.globalVars.popup.remove();
-        this.globalVars.backdrop.remove();
+    get() {
+        return getCourseId(this.editor);
+    }
 
-        if(this.globalVars.appReact){
-            this.globalVars.appReact.unmount();
-        }
-    }          
-
-    loadUi(){
-        if (window.openRecitAutolinkUI){
-            this.globalVars.appReact = window.openRecitAutolinkUI(this);
+    unmountUI() {
+        if (this.appReact) {
+            this.appReact.unmount();
         }
     }
 
-    close(code){
-        this.destroy();
-        if (code){
-            this.globalVars.editor.execCommand('mceFocus');
-            this.globalVars.editor.execCommand('mceInsertContent', false, code);
-            this.globalVars.popup.close();
+    loadUI() {
+        if (window.openRecitAutolinkUI) {
+            let classHandler = {
+                get: (v) => this.get(v),
+                close: (v) => this.closeUI(v)
+            };
+            this.appReact = window.openRecitAutolinkUI(classHandler);
+        }
+    }
+
+    closeUI(code) {
+        this.modal.destroy();  
+
+        this.unmountUI();
+        if (code) {
+            this.editor.execCommand('mceInsertContent', false, code);
         }
     }
 }
