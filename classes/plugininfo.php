@@ -124,7 +124,8 @@ class plugininfo extends plugin implements plugin_with_buttons, plugin_with_menu
             'displaybyrole',
             'displaybyroleinfo',
             'qrcode',
-            'qrcode100'
+            'qrcode100',
+            'embed'
         ),
     'tiny_recitautolink');
 

@@ -55,20 +55,33 @@ export class AppWebApi extends WebApi
         this.post(this.gateway + "&info=" + methodName, [data], onSuccess);
     }
 
+    checkResultQueryMoodle(result, onSuccess){
+        let data = result.pop();  
+
+        if(data.error){
+            console.log(data.exception.backtrace);
+            window.alert(`${data.exception.debuginfo}\n\n${data.exception.backtrace}`);
+        }
+        else{
+            onSuccess(data);
+        }
+
+    }
+
     getCmList(cId, onSuccess){
-        this.queryMoodle('tiny_recitautolink_get_cm_list', {courseid: parseInt(cId)}, onSuccess);
+        this.queryMoodle('tiny_recitautolink_get_cm_list', {courseid: parseInt(cId)}, (result) => this.checkResultQueryMoodle(result, onSuccess));
     }
 
     getSectionList(cId, onSuccess){
-        this.queryMoodle('tiny_recitautolink_get_section_list', {courseid: parseInt(cId)}, onSuccess);
+        this.queryMoodle('tiny_recitautolink_get_section_list', {courseid: parseInt(cId)}, (result) => this.checkResultQueryMoodle(result, onSuccess));
     }
 
     getH5PList(cId, onSuccess){
-        this.queryMoodle('tiny_recitautolink_get_h5p_list', {courseid: parseInt(cId)}, onSuccess);
+        this.queryMoodle('tiny_recitautolink_get_h5p_list', {courseid: parseInt(cId)}, (result) => this.checkResultQueryMoodle(result, onSuccess));
     }
 
     getRoleList(cId, onSuccess){
-        this.queryMoodle('tiny_recitautolink_get_role_list', {courseid: parseInt(cId)}, onSuccess);
+        this.queryMoodle('tiny_recitautolink_get_role_list', {courseid: parseInt(cId)}, (result) => this.checkResultQueryMoodle(result, onSuccess));
     }
 
 };

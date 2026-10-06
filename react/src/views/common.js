@@ -52,6 +52,10 @@ export class GeneratorCode{
 		h5p: '',
 	};
 
+	static embedData = {
+		activity: ''
+	}
+
 	static infoData = {
 		info: ''
 	};
@@ -147,6 +151,17 @@ export class GeneratorCode{
 		result = `[[${result}]]`;
 		return result;
   	}
+	 
+	static getEmbedCode(data){
+		if(data.activity.length === 0){
+			alert(M.util.get_string('invalidcode', 'tiny_recitautolink'));
+			return null;
+		}
+
+		let result = `e/${data.activity}`;
+		result = `[[${result}]]`;
+		return result;
+  	}
 
 	static getInfoCode(data){
 		if(data.info.length === 0){
@@ -205,11 +220,23 @@ export class GeneratorCode{
 		return result;
 	}
 
+	static escapeHtml(str) {
+		return str.replace(/&/g, '&amp;')
+		          .replace(/</g, '&lt;')
+		          .replace(/>/g, '&gt;');
+	}
+
+	static sanitizeShortcodeText(text) {
+		// Strip characters that break the [[...]] shortcode format:
+		// " is the token delimiter, [[ and ]] are the shortcode boundaries.
+		return text.replace(/"/g, '').replace(/\[{2}|\]{2}/g, '');
+	}
+
 	static getLinkTextIntCode(linktext){
 		let result = '';
 
 		if (linktext.length > 0){
-			result = `desc:"${linktext}"/`;
+			result = `desc:"${GeneratorCode.sanitizeShortcodeText(linktext)}"/`;
 		}
 
 		return result;
@@ -219,7 +246,9 @@ export class GeneratorCode{
 		let result = '';
 
 		if (css.length > 0){
-			result = `class:"${css}"/`;
+			// Allow only safe CSS class name characters.
+			const safe = css.replace(/[^a-zA-Z0-9 \-_]/g, '');
+			result = `class:"${safe}"/`;
 		}
 
 		return result;
@@ -239,9 +268,9 @@ export class HelpButton extends Component {
     render(){
         const popover = (
             <Popover id="popover-help">
-              <Popover.Content>
+              <Popover.Body>
                 {this.props.helpText}
-              </Popover.Content>
+              </Popover.Body>
             </Popover>
           );
 

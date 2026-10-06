@@ -49,7 +49,7 @@ export class ActivityForm extends Component {
         <Form>
             <Form.Group className="mb-3" controlId={"itemactivity1"}>
                 <Form.Label className='d-flex align-items-center'>
-                    <span className='mr-1'>{M.util.get_string('activity', 'tiny_recitautolink')}</span> 
+                    <span className='me-1'>{M.util.get_string('activity', 'tiny_recitautolink')}</span> 
                     <HelpButton icon={faInfoCircle} helpText={<span>{M.util.get_string('resourceaccess', 'tiny_recitautolink')}</span>}/>
                 </Form.Label>
                 <ComboBoxPlus options={this.props.cmList} name='activity' onChange={this.onChange} value={this.state.data.activity}/>
@@ -63,7 +63,7 @@ export class ActivityForm extends Component {
 
             <Form.Group className="mb-3" controlId={"itemactivity8"}>
                 <Form.Label className='d-flex align-items-center'>
-                    <span className='mr-1'>{M.util.get_string('displaybyrole', 'tiny_recitautolink')}</span>
+                    <span className='me-1'>{M.util.get_string('displaybyrole', 'tiny_recitautolink')}</span>
                     <HelpButton icon={faInfoCircle} helpText={<span>{M.util.get_string('displaybyroleinfo', 'tiny_recitautolink')}</span>}/>
                 </Form.Label>
                 <ComboBoxPlusMulti name="roles" value={this.state.data.roles} onChange={this.onChange} options={this.props.roleList}/>

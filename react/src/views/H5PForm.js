@@ -52,7 +52,7 @@ export class H5PForm extends Component {
         <Form>
             <Form.Group className="mb-3" controlId={"itemh5p1"} style={{height: 200}}>
                 <Form.Label className='d-flex align-items-center'>
-                    <span className='mr-1'>{M.util.get_string('h5p', 'tiny_recitautolink')}</span>
+                    <span className='me-1'>{M.util.get_string('h5p', 'tiny_recitautolink')}</span>
                     <HelpButton icon={faInfoCircle} helpText={<span>{M.util.get_string('resourceaccess', 'tiny_recitautolink')}</span>}/>
                 </Form.Label>
                 <ComboBoxPlus options={this.props.h5pList} name='h5p' onChange={this.onChange} value={this.state.data.h5p}/>

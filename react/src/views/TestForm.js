@@ -100,7 +100,7 @@ export class TestForm extends Component {
                         data.activitycss = css;
 
                         let intCode = GeneratorCode.getActivityCode(data);
-                        result.push(`${intCode} => ${intCode.replace('[[', '').replace(']]', '')}`);
+                        result.push(`${GeneratorCode.escapeHtml(intCode)} => ${GeneratorCode.escapeHtml(intCode.replace('[[', '').replace(']]', ''))}`);
                     }
                 }
             }
@@ -130,7 +130,7 @@ export class TestForm extends Component {
                 data.sectioncss = css;
 
                 let intCode = GeneratorCode.getSectionCode(data);
-                result.push(`${intCode} => ${intCode.replace('[[', '').replace(']]', '')}`);
+                result.push(`${GeneratorCode.escapeHtml(intCode)} => ${GeneratorCode.escapeHtml(intCode.replace('[[', '').replace(']]', ''))}`);
             }
         }
 
@@ -151,7 +151,7 @@ export class TestForm extends Component {
         data.h5p = item.value;
 
         let intCode = GeneratorCode.getH5PCode(data);
-        result.push(`${intCode} => ${intCode.replace('[[', '').replace(']]', '')}`);
+        result.push(`${GeneratorCode.escapeHtml(intCode)} => ${GeneratorCode.escapeHtml(intCode.replace('[[', '').replace(']]', ''))}`);
 
         return result.join("<br/><br/>");
     }
@@ -170,7 +170,7 @@ export class TestForm extends Component {
         for(let item of infoList){
             data.info = item;
             let intCode = GeneratorCode.getInfoCode(data);
-            result.push(`${intCode} => ${intCode.replace('[[', '').replace(']]', '')}`);
+            result.push(`${GeneratorCode.escapeHtml(intCode)} => ${GeneratorCode.escapeHtml(intCode.replace('[[', '').replace(']]', ''))}`);
         }
 
         return result.join("<br/><br/>");
@@ -201,7 +201,7 @@ export class TestForm extends Component {
                 data.activitycss = css;
 
                 let intCode = GeneratorCode.getInjectionActivityCode(data);
-                result.push(`${intCode} => ${intCode.replace('[[', '').replace(']]', '')}`);
+                result.push(`${GeneratorCode.escapeHtml(intCode)} => ${GeneratorCode.escapeHtml(intCode.replace('[[', '').replace(']]', ''))}`);
             }
         }
 

@@ -50,6 +50,10 @@ class tiny_recitautolink_external extends external_api {
                         self::get_cm_list_parameters(),
                         array('courseid' => $courseid));
 
+        $coursecontext = \context_course::instance($params['courseid']);
+        self::validate_context($coursecontext);
+        require_capability('moodle/course:manageactivities', $coursecontext);
+
         $result = array();
         $modinfo = get_fast_modinfo($params['courseid']);
 
@@ -80,6 +84,10 @@ class tiny_recitautolink_external extends external_api {
         $params = self::validate_parameters(
                         self::get_section_list_parameters(),
                         array('courseid' => $courseid));
+
+        $coursecontext = \context_course::instance($params['courseid']);
+        self::validate_context($coursecontext);
+        require_capability('moodle/course:manageactivities', $coursecontext);
 
         $result = array();
         $modinfo = get_fast_modinfo($params['courseid']);
@@ -113,8 +121,9 @@ class tiny_recitautolink_external extends external_api {
                         self::get_h5p_list_parameters(),
                         array('courseid' => $courseid));
 
-        $result = array();
         $coursecontext = \context_course::instance($params['courseid']);
+        self::validate_context($coursecontext);
+        $result = array();
 
         $PAGE->set_context($coursecontext);
 
@@ -152,8 +161,10 @@ class tiny_recitautolink_external extends external_api {
                         self::get_role_list_parameters(),
                         array('courseid' => $courseid));
 
-        $result = array();
         $coursecontext = \context_course::instance($params['courseid']);
+        self::validate_context($coursecontext);
+        require_capability('moodle/course:manageactivities', $coursecontext);
+        $result = array();
         $rolelist = role_get_names($coursecontext);
         
         foreach ($rolelist as $item){

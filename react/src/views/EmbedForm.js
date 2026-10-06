@@ -26,7 +26,7 @@ import { ComboBoxPlus } from '../libs/components/ComboBoxPlus';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { GeneratorCode, HelpButton } from './common';
 
-export class QRCodeForm extends Component {
+export class EmbedForm extends Component {
     static defaultProps = {
         cmList: [],
         onClose: null
@@ -39,32 +39,26 @@ export class QRCodeForm extends Component {
         this.onInsert = this.onInsert.bind(this);
 
         this.state = {
-            data: Object.assign({}, GeneratorCode.qrCodeData)
+            data:  { ...GeneratorCode.embedData }
         };
     }
 
-    render() {       
+    componentWillUnmount(){
+        this.setState({data: { ...GeneratorCode.embedData }});
+    }
+
+    render() {
+        let activityList = this.props.cmList.filter((e) => e.modname == 'resource' || e.modname == 'scorm');
         let main = 
         <Form>
-            <Form.Group className="mb-3" controlId={"itemactivity1"}>
+            <Form.Group className="mb-3" controlId={"itemembed1"} style={{height: 200}}>
                 <Form.Label className='d-flex align-items-center'>
-                    <span className='me-1'>{M.util.get_string('activity', 'tiny_recitautolink')}</span> 
+                    <span className='me-1'>{M.util.get_string('activity', 'tiny_recitautolink')}</span>
                     <HelpButton icon={faInfoCircle} helpText={<span>{M.util.get_string('resourceaccess', 'tiny_recitautolink')}</span>}/>
                 </Form.Label>
-                <ComboBoxPlus options={this.props.cmList} name='activity' onChange={this.onChange} value={this.state.data.activity}/>
+                <ComboBoxPlus options={activityList} name='activity' onChange={this.onChange} value={this.state.data.activity}/>
             </Form.Group>
-          
-            <Form.Group ><hr/></Form.Group>
 
-            <Form.Group controlId={"itemactivity3"}>
-                <div className="d-flex align-items-center">
-                    <Form.Check  className="m-1" id={`opening5`} inline type='radio' label={M.util.get_string('qrcode', 'tiny_recitautolink')} name='opening' onChange={this.onChange} value='qr'/>
-                </div>
-                <div className="d-flex align-items-center">
-                    <Form.Check  className="m-1" id={`opening6`} inline type='radio' label={M.util.get_string('qrcode100', 'tiny_recitautolink')} name='opening' onChange={this.onChange} value='qr100'/>
-                </div>
-            </Form.Group>
-           
             <Form.Group ><hr/></Form.Group>
 
             <ButtonGroup className='d-flex'>
@@ -73,26 +67,18 @@ export class QRCodeForm extends Component {
             </ButtonGroup>  
         </Form>;
         
-
         return (main);
     }
 
     onChange(e){
         let data = this.state.data;
-
-        let value = e.target.value;
-        if((e.target.type == 'radio') || (e.target.type == 'checkbox')){
-            value = (e.target.checked ? e.target.value : '');
-        }  
-        
-        data[e.target.name] = value;
-        
+        data[e.target.name] = e.target.value;
         this.setState({data: data});
     }
 
     onInsert(){
-        let result = GeneratorCode.getQRCode(this.state.data);
-        
+        let result = GeneratorCode.getEmbedCode(this.state.data);
+
         if(result !== null){
             this.props.onClose(result);
         }

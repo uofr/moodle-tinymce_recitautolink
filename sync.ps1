@@ -1,5 +1,5 @@
 $from = "moodle-tinymce_recitautolink/src/*"
-$to = "shared/recitfad3/lib/editor/tiny/plugins/recitautolink"
+$to = "shared/recitfad4/public/lib/editor/tiny/plugins/recitautolink"
 $source = "./src";
 
 try {
